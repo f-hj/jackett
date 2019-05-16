@@ -1,0 +1,38 @@
+{
+  "name": "node-jackett",
+  "version": "1.0.0",
+  "description": "Jackett API Implementation.",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "rimraf dist && tsc -p tsconfig.build.json",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "tslint -p tsconfig.json -c tslint.json",
+    "typecheck": "tsc -p tsconfig.build.json --noEmit",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.issaias.net/dante/node-jackett"
+  },
+  "keywords": [
+    "htpc",
+    "telegram",
+    "bot"
+  ],
+  "author": "Dante <dante@issaias.net>",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^1.17.1",
+    "rimraf": "^2.6.3",
+    "ts-node": "^8.1.0",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "@types/request": "^2.48.1",
+    "@types/request-promise": "^4.1.43",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "node-jackett",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Jackett API Implementation.",
   "main": "dist/index.js",
   "scripts": {

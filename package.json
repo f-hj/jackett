@@ -1,8 +1,12 @@
 {
   "name": "node-jackett",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Jackett API Implementation.",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "start": "node dist/index.js",
     "build": "rimraf dist && tsc -p tsconfig.build.json",

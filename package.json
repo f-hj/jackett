@@ -17,8 +17,8 @@
   },
   "keywords": [
     "htpc",
-    "telegram",
-    "bot"
+    "jackett",
+    "jackett-api"
   ],
   "author": "Dante <dante@issaias.net>",
   "license": "MIT",

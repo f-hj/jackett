@@ -1,4 +1,4 @@
-# node-transmission
+# node-jackett
 
 Javascript Jackett API Implementation.
 

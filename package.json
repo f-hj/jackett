@@ -37,6 +37,7 @@
     "@types/request": "^2.48.1",
     "@types/request-promise": "^4.1.43",
     "request": "^2.88.0",
-    "request-promise": "^4.2.4"
+    "request-promise": "^4.2.4",
+    "xml-js": "^1.6.11"
   }
 }

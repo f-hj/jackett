@@ -6,6 +6,35 @@ export interface JackettIndexer {
   Error?: string;
 }
 
+interface SearchType {
+  Available: string;
+  SupportedParams: string;
+}
+export interface JackettIndexerDetails {
+  ID: string;
+  Configured: boolean;
+  Title: string;
+  Description: string;
+  Link: string;
+  Language: string;
+  Type: 'public' | 'private' | 'semi-private';
+  Categories: [
+    {
+      ID: number;
+      Name: string;
+    }
+  ];
+  Searching: [
+    {
+      Search: SearchType;
+      TvSearch: SearchType;
+      MovieSearch: SearchType;
+      MusicSearch: SearchType;
+      AudioSearch: SearchType;
+    }
+  ];
+}
+
 export interface JackettResult {
   FirstSeen: Date;
   Tracker: string;

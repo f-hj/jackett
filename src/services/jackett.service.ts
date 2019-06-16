@@ -7,6 +7,11 @@ import { xml2js } from 'xml-js';
 export class JackettService {
   constructor(private host: string, private apiKey: string) {}
 
+  /**
+   * search
+   * @param {string} query Search string
+   * @param {number[]} categories Categories to include
+   */
   public async search(query: string, categories?: number[]): Promise<JackettResponse> {
     const url =
       `${this.host}/api/v2.0/indexers/all/results?apikey=${this.apiKey}&Query=${encodeURIComponent(query)}` +
@@ -17,10 +22,18 @@ export class JackettService {
       json: true,
     }).then(json => json);
   }
+
+  /**
+   * searchRSS
+   * @param {string} query Search string
+   * @param {string} indexer Indexer to search
+   * @param {number[]} categories Categories to include
+   */
   public async searchRSS(query: string, indexer: string = 'all', categories?: number[]): Promise<JackettResult[]> {
     const url =
       `${this.host}/api/v2.0/indexers/${indexer}/results/torznab/api?apikey=${this.apiKey}&t=search` +
-      `&q=${encodeURIComponent(query)}` + `${categories ? '&cat=' + categories.join(',') : ''}`;
+      `&q=${encodeURIComponent(query)}` +
+      `${categories ? '&cat=' + categories.join(',') : ''}`;
     return request(url)
       .then(xml => xml2js(xml, { compact: true, nativeType: true }))
       .then((json: any) => {
@@ -60,8 +73,17 @@ export class JackettService {
         });
       });
   }
+
+  /**
+   * getIndexers
+   * @param {boolean} configured Only get configured indexers
+   */
   public async getIndexers(configured: boolean = true): Promise<JackettIndexerDetails[]> {
-    return request(`${this.host}/api/v2.0/indexers/all/results/torznab/api?apikey=${this.apiKey}&t=indexers&configured=${configured}`)
+    return request(
+      `${this.host}/api/v2.0/indexers/all/results/torznab/api?apikey=${
+        this.apiKey
+      }&t=indexers&configured=${configured}`,
+    )
       .then(xml => xml2js(xml, { compact: true, nativeType: true }))
       .then((json: any) => {
         return json.indexers.indexer.map(indexer => {

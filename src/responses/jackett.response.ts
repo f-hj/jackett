@@ -10,6 +10,7 @@ interface SearchType {
   Available: string;
   SupportedParams: string;
 }
+
 export interface JackettIndexerDetails {
   ID: string;
   Configured: boolean;
@@ -18,21 +19,21 @@ export interface JackettIndexerDetails {
   Link: string;
   Language: string;
   Type: 'public' | 'private' | 'semi-private';
-  Categories: [
-    {
-      ID: number;
-      Name: string;
-    }
-  ];
-  Searching: [
-    {
-      Search: SearchType;
-      TvSearch: SearchType;
-      MovieSearch: SearchType;
-      MusicSearch: SearchType;
-      AudioSearch: SearchType;
-    }
-  ];
+  Categories: [JackettIndexerDetailsCategory];
+  Searching: [JackettIndexerDetailsSearching];
+}
+
+interface JackettIndexerDetailsCategory {
+  ID: number;
+  Name: string;
+}
+
+interface JackettIndexerDetailsSearching {
+  Search: SearchType;
+  TvSearch: SearchType;
+  MovieSearch: SearchType;
+  MusicSearch: SearchType;
+  AudioSearch: SearchType;
 }
 
 export interface JackettResult {

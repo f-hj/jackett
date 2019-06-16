@@ -18,17 +18,21 @@ export interface JackettIndexerDetails {
   link: string;
   language: string;
   type: 'public' | 'private' | 'semi-private';
-  categories: [{
-    id: number,
-    name: string,
-  }];
-  searching: [{
-    search: SearchType,
-    tvSearch: SearchType,
-    movieSearch: SearchType,
-    musicSearch: SearchType,
-    audioSearch: SearchType,
-  }];
+  categories: [
+    {
+      id: number;
+      name: string;
+    }
+  ];
+  searching: [
+    {
+      search: SearchType;
+      tvSearch: SearchType;
+      movieSearch: SearchType;
+      musicSearch: SearchType;
+      audioSearch: SearchType;
+    }
+  ];
 }
 
 export interface JackettResult {

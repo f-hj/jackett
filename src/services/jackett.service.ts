@@ -43,7 +43,7 @@ export class JackettService {
             Guid: item.guid._text,
             Link: item.link._text,
             Comments: item.comments._text,
-            Category: item.category.map(category => category._text),
+            Category: Array.isArray(item.category) && item.category.map(category => category._text),
             MagnetUri: torznabAttrs.magneturl,
             Imdb: torznabAttrs.imdb,
             Seeders: torznabAttrs.seeders,

@@ -1,5 +1,9 @@
 # NodeJS Jackett
 
+[![license](https://img.shields.io/github/license/danteissaias/jackett.svg)](https://github.com/danteissaias/vision/blob/master/LICENSE.md)
+![dependencies](https://img.shields.io/david/danteissaias/jackett.svg)
+[![npm](https://img.shields.io/npm/v/jackett.svg)](https://npmjs.com/jackett)
+
 ## Installation
 
 From npm

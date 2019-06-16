@@ -1,6 +1,6 @@
 import * as request from 'request-promise';
 
-import {JackettIndexerDetails, JackettResponse} from '../responses/jackett.response';
+import {JackettIndexerDetails, JackettResponse, JackettResult} from '../responses/jackett.response';
 
 import {xml2js} from 'xml-js';
 
@@ -17,11 +17,51 @@ export class JackettService {
       json: true,
     }).then(json => json);
   }
+  public async searchRSS(query: string, indexer: string = 'all', categories?: number[]): Promise<JackettResult[]> {
+      const url =
+          `${this.host}/api/v2.0/indexers/${indexer}/results/torznab/api?apikey=${this.apiKey}&t=search&q=${encodeURIComponent(query)}` +
+          `${categories ? '&cat=' + categories.join(',') : ''}`;
+      return request(url).then(xml => xml2js(xml, {compact: true, nativeType: true})).then(((json: any) => {
+        if (json.error) {
+          return Promise.resolve([]);
+        }
+        return [].concat(json.rss.channel.item || []).map(item => {
+          const torznabAttrs: any = {};
+          item['torznab:attr'].forEach(attr => {
+            torznabAttrs[attr._attributes.name] = attr._attributes.value;
+          });
+          return {
+            Title: item.title._text,
+            Tracker: item.jackettindexer._attributes.id,
+            TrackerId: item.jackettindexer._text,
+            PublishDate: item.pubDate._text,
+            FirstSeen: item.pubDate._text,
+            Size: item.size._text,
+            Description: item.description._text,
+            Guid: item.guid._text,
+            Link: item.link._text,
+            Comments: item.comments._text,
+            Category: item.category.map(category => category._text),
+            MagnetUri: torznabAttrs.magneturl,
+            Imdb: torznabAttrs.imdb,
+            Seeders: torznabAttrs.seeders,
+            Peers: torznabAttrs.peers,
+            InfoHash: torznabAttrs.infohash,
+            DownloadVolumeFactor: torznabAttrs.downloadvolumefactor,
+            UploadVolumeFactor: torznabAttrs.uploadvolumefactor,
+            RageID: 0,
+            TVDBId: 0,
+            TMDb: 0,
+            Gain: 0,
+            CategoryDesc: '',
+          };
+        });
+      }));
+  }
   public async getIndexers(configured: boolean = true): Promise<JackettIndexerDetails[]> {
     return request({
       url: `${this.host}/api/v2.0/indexers/all/results/torznab/api?apikey=${this.apiKey}&t=indexers&configured=${configured}`,
-    }).then(xml => xml2js(xml, {compact: true, nativeType: true})).then(json => {
-      // @ts-ignore
+    }).then(xml => xml2js(xml, {compact: true, nativeType: true})).then((json: any) => {
       return json.indexers.indexer.map(indexer => {
         const searching = indexer.caps.searching;
         return {

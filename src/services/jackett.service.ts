@@ -67,34 +67,39 @@ export class JackettService {
         return json.indexers.indexer.map(indexer => {
           const searching = indexer.caps.searching;
           return {
-            id: indexer._attributes.id,
-            configured: indexer._attributes.configured,
-            title: indexer.title._text,
-            description: indexer.description._text,
-            link: indexer.link._text,
-            language: indexer.language._text,
-            type: indexer.type._text,
-            categories: [].concat(indexer.caps.categories.category).map(category => category._attributes),
-            searching: {
-              search: {
-                available: searching.search._attributes.available,
-                supportedParams: searching.search._attributes.supportedParams,
+            ID: indexer._attributes.id,
+            Configured: indexer._attributes.configured,
+            Title: indexer.title._text,
+            Description: indexer.description._text,
+            Link: indexer.link._text,
+            Language: indexer.language._text,
+            Type: indexer.type._text,
+            Categories: [].concat(indexer.caps.categories.category).map(category => {
+              return {
+                ID: category._attributes.id,
+                Name: category._attributes.name,
+              };
+            }),
+            Searching: {
+              Search: {
+                Available: searching.search._attributes.available,
+                SupportedParams: searching.search._attributes.supportedParams,
               },
-              tvSearch: {
-                available: searching['tv-search']._attributes.available,
-                supportedParams: searching['tv-search']._attributes.supportedParams,
+              TvSearch: {
+                Available: searching['tv-search']._attributes.available,
+                SupportedParams: searching['tv-search']._attributes.supportedParams,
               },
-              movieSearch: {
-                available: searching['movie-search']._attributes.available,
-                supportedParams: searching['movie-search']._attributes.supportedParams,
+              MovieSearch: {
+                Available: searching['movie-search']._attributes.available,
+                SupportedParams: searching['movie-search']._attributes.supportedParams,
               },
-              musicSearch: {
-                available: searching['music-search']._attributes.available,
-                supportedParams: searching['music-search']._attributes.supportedParams,
+              MusicSearch: {
+                Available: searching['music-search']._attributes.available,
+                SupportedParams: searching['music-search']._attributes.supportedParams,
               },
-              audioSearch: {
-                available: searching['audio-search']._attributes.available,
-                supportedParams: searching['audio-search']._attributes.supportedParams,
+              AudioSearch: {
+                Available: searching['audio-search']._attributes.available,
+                SupportedParams: searching['audio-search']._attributes.supportedParams,
               },
             },
           };

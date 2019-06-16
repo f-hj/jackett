@@ -7,30 +7,30 @@ export interface JackettIndexer {
 }
 
 interface SearchType {
-  available: string;
-  supportedParams: string;
+  Available: string;
+  SupportedParams: string;
 }
 export interface JackettIndexerDetails {
-  id: string;
-  configured: boolean;
-  title: string;
-  description: string;
-  link: string;
-  language: string;
-  type: 'public' | 'private' | 'semi-private';
-  categories: [
+  ID: string;
+  Configured: boolean;
+  Title: string;
+  Description: string;
+  Link: string;
+  Language: string;
+  Type: 'public' | 'private' | 'semi-private';
+  Categories: [
     {
-      id: number;
-      name: string;
+      ID: number;
+      Name: string;
     }
   ];
-  searching: [
+  Searching: [
     {
-      search: SearchType;
-      tvSearch: SearchType;
-      movieSearch: SearchType;
-      musicSearch: SearchType;
-      audioSearch: SearchType;
+      Search: SearchType;
+      TvSearch: SearchType;
+      MovieSearch: SearchType;
+      MusicSearch: SearchType;
+      AudioSearch: SearchType;
     }
   ];
 }

@@ -77,17 +77,21 @@ export class JackettService {
       `${this.host}/api/v2.0/indexers/${indexer}/results/torznab/api?apikey=${this.apiKey}&t=search` +
       `&q=${encodeURIComponent(query)}` +
       `${categories ? '&cat=' + categories.join(',') : ''}`;
+
     return request(url)
       .then(xml => xml2js(xml, { compact: true, nativeType: true }))
       .then((json: any) => {
         if (json.error) {
           return Promise.resolve([]);
         }
+
         return [].concat(json.rss.channel.item || []).map(item => {
           const torznabAttrs: any = {};
+
           item['torznab:attr'].forEach(attr => {
             torznabAttrs[attr._attributes.name] = attr._attributes.value;
           });
+
           return {
             Title: item.title._text,
             Tracker: item.jackettindexer._attributes.id,

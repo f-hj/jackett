@@ -1,8 +1,15 @@
 import * as request from 'request-promise';
 
-import { JackettIndexerDetails, JackettResponse, JackettResult } from '../responses/jackett.response';
+import {
+  JackettFilteringParams,
+  JackettIndexerDetails,
+  JackettResponse,
+  JackettResult,
+} from '../responses/jackett.response';
 
 import { xml2js } from 'xml-js';
+
+import { ParsedUrlQueryInput, stringify } from 'querystring';
 
 export class JackettService {
   public Categories = {
@@ -71,12 +78,19 @@ export class JackettService {
    * @param {string} query Search string
    * @param {string} indexer Indexer to search
    * @param {number[]} categories Categories to include
+   * @param {JackettFilteringParams} extraParams
    */
-  public async searchRSS(query: string, indexer: string = 'all', categories?: number[]): Promise<JackettResult[]> {
+  public async searchRSS(
+    query: string,
+    indexer: string = 'all',
+    categories?: number[],
+    extraParams?: JackettFilteringParams,
+  ): Promise<JackettResult[]> {
     const url =
       `${this.host}/api/v2.0/indexers/${indexer}/results/torznab/api?apikey=${this.apiKey}&t=search` +
       `&q=${encodeURIComponent(query)}` +
-      `${categories ? '&cat=' + categories.join(',') : ''}`;
+      `${categories ? '&cat=' + categories.join(',') : ''}` +
+      `${extraParams ? '&' + stringify(extraParams as ParsedUrlQueryInput) : ''}`;
 
     return request(url)
       .then(xml => xml2js(xml, { compact: true, nativeType: true }))

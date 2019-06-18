@@ -72,3 +72,10 @@ export interface JackettResponse {
   Results: JackettResult[];
   Indexers: JackettIndexer[];
 }
+
+export interface JackettFilteringParams {
+  offset?: number;
+  limit?: number;
+  ep?: number;
+  season?: number;
+}

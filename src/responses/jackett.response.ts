@@ -79,3 +79,9 @@ export interface JackettFilteringParams {
   ep?: number;
   season?: number;
 }
+
+export interface JackettCategory {
+  ID: number;
+  Name: string;
+  SubCategories?: JackettCategory[];
+}

@@ -5,6 +5,7 @@ import {
   JackettIndexerDetails,
   JackettResponse,
   JackettResult,
+  JackettCategory,
 } from '../responses/jackett.response';
 
 import { xml2js } from 'xml-js';
@@ -186,6 +187,35 @@ export class JackettService {
               },
             },
           };
+        });
+      });
+  }
+
+  /**
+   * getCategories
+   */
+  public async getCategories() {
+    return request(`${this.host}/api/v2.0/indexers/all/results/torznab/api?apikey=${this.apiKey}&t=caps`)
+      .then(xml => xml2js(xml, { compact: true, nativeType: true }))
+      .then((json: any) => {
+        return json.caps.categories.category.map(category => {
+          let subcategories: JackettCategory[] = null;
+          if (category.subcat !== undefined) {
+            subcategories = category.subcat.map(subcategory => {
+              return {
+                ID: subcategory._attributes.id,
+                Name: subcategory._attributes.name,
+              };
+            });
+          }
+          const result: JackettCategory = {
+            ID: category._attributes.id,
+            Name: category._attributes.name,
+          };
+          if (subcategories !== null) {
+            result.SubCategories = subcategories;
+          }
+          return result;
         });
       });
   }

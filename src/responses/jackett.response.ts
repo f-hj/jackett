@@ -72,3 +72,9 @@ export interface JackettResponse {
   Results: JackettResult[];
   Indexers: JackettIndexer[];
 }
+
+export interface JackettCategories {
+  ID: number;
+  Name: string;
+  SubCategories?: JackettCategories[];
+}

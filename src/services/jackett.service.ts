@@ -1,4 +1,6 @@
+import { ParsedUrlQueryInput, stringify } from 'querystring';
 import * as request from 'request-promise';
+import { xml2js } from 'xml-js';
 
 import {
   JackettFilteringParams,
@@ -8,9 +10,6 @@ import {
   JackettCategory,
 } from '../responses/jackett.response';
 
-import { xml2js } from 'xml-js';
-
-import { ParsedUrlQueryInput, stringify } from 'querystring';
 
 export class JackettService {
   public Categories = {

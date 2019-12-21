@@ -1,6 +1,2 @@
-export {
-  JackettResponse as Response,
-  JackettResult as Result,
-  JackettIndexer as Indexer,
-} from './responses/jackett.response';
-export { JackettService as Jackett } from './services/jackett.service';
+export { Responses as Response, Result as Result, Indexer as Indexer } from "./responses"
+export { Service as Jackett } from "./service"

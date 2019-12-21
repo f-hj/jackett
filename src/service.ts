@@ -1,18 +1,11 @@
-import { ParsedUrlQueryInput, stringify } from 'querystring';
-import * as request from 'request-promise';
-import { xml2js } from 'xml-js';
+import { ParsedUrlQueryInput, stringify } from "querystring"
+import * as request from "request-promise"
+import { xml2js } from "xml-js"
 
-import {
-  JackettFilteringParams,
-  JackettIndexerDetails,
-  JackettResponse,
-  JackettResult,
-  JackettCategory,
-} from '../responses/jackett.response';
+import { FilteringParams, IndexerDetails, Responses, Result, Category } from "./responses"
 
-
-export class JackettService {
-  public Categories = {
+export class Service {
+  public categories = {
     Console: 1000,
     ConsoleWii: 1030,
     ConsoleXBox: 1040,
@@ -53,7 +46,7 @@ export class JackettService {
     BooksEBook: 8010,
     BooksComics: 8020,
     BooksOther: 8050,
-  };
+  }
 
   constructor(private host: string, private apiKey: string) {}
 
@@ -62,15 +55,15 @@ export class JackettService {
    * @param {string} query Search string
    * @param {number[]} categories Categories to include
    */
-  public async search(query: string, categories?: number[]): Promise<JackettResponse> {
+  public async search(query: string, categories?: number[]): Promise<Responses> {
     const url =
       `${this.host}/api/v2.0/indexers/all/results?apikey=${this.apiKey}&Query=${encodeURIComponent(query)}` +
-      `${categories ? '&Category[]=' + categories.join('&Category[]=') : ''}`;
+      `${categories ? "&Category[]=" + categories.join("&Category[]=") : ""}`
 
     return request({
       url,
       json: true,
-    }).then(json => json);
+    }).then(json => json)
   }
 
   /**
@@ -78,33 +71,33 @@ export class JackettService {
    * @param {string} query Search string
    * @param {string} indexer Indexer to search
    * @param {number[]} categories Categories to include
-   * @param {JackettFilteringParams} extraParams
+   * @param {FilteringParams} extraParams
    */
   public async searchRSS(
     query: string,
-    indexer: string = 'all',
+    indexer: string = "all",
     categories?: number[],
-    extraParams?: JackettFilteringParams,
-  ): Promise<JackettResult[]> {
+    extraParams?: FilteringParams,
+  ): Promise<Result[]> {
     const url =
       `${this.host}/api/v2.0/indexers/${indexer}/results/torznab/api?apikey=${this.apiKey}&t=search` +
       `&q=${encodeURIComponent(query)}` +
-      `${categories ? '&cat=' + categories.join(',') : ''}` +
-      `${extraParams ? '&' + stringify(extraParams as ParsedUrlQueryInput) : ''}`;
+      `${categories ? "&cat=" + categories.join(",") : ""}` +
+      `${extraParams ? "&" + stringify(extraParams as ParsedUrlQueryInput) : ""}`
 
     return request(url)
       .then(xml => xml2js(xml, { compact: true, nativeType: true }))
       .then((json: any) => {
         if (json.error) {
-          return Promise.resolve([]);
+          return Promise.resolve([])
         }
 
         return [].concat(json.rss.channel.item || []).map(item => {
-          const torznabAttrs: any = {};
+          const torznabAttrs: any = {}
 
-          item['torznab:attr'].forEach(attr => {
-            torznabAttrs[attr._attributes.name] = attr._attributes.value;
-          });
+          item["torznab:attr"].forEach(attr => {
+            torznabAttrs[attr._attributes.name] = attr._attributes.value
+          })
 
           return {
             Title: item.title._text,
@@ -129,17 +122,17 @@ export class JackettService {
             TVDBId: 0,
             TMDb: 0,
             Gain: 0,
-            CategoryDesc: '',
-          };
-        });
-      });
+            CategoryDesc: "",
+          }
+        })
+      })
   }
 
   /**
    * getIndexers
    * @param {boolean} configured Only get configured indexers
    */
-  public async getIndexers(configured: boolean = true): Promise<JackettIndexerDetails[]> {
+  public async getIndexers(configured: boolean = true): Promise<IndexerDetails[]> {
     return request(
       `${this.host}/api/v2.0/indexers/all/results/torznab/api?apikey=${
         this.apiKey
@@ -148,7 +141,7 @@ export class JackettService {
       .then(xml => xml2js(xml, { compact: true, nativeType: true }))
       .then((json: any) => {
         return json.indexers.indexer.map(indexer => {
-          const searching = indexer.caps.searching;
+          const searching = indexer.caps.searching
           return {
             ID: indexer._attributes.id,
             Configured: indexer._attributes.configured,
@@ -161,7 +154,7 @@ export class JackettService {
               return {
                 ID: category._attributes.id,
                 Name: category._attributes.name,
-              };
+              }
             }),
             Searching: {
               Search: {
@@ -169,25 +162,25 @@ export class JackettService {
                 SupportedParams: searching.search._attributes.supportedParams,
               },
               TvSearch: {
-                Available: searching['tv-search']._attributes.available,
-                SupportedParams: searching['tv-search']._attributes.supportedParams,
+                Available: searching["tv-search"]._attributes.available,
+                SupportedParams: searching["tv-search"]._attributes.supportedParams,
               },
               MovieSearch: {
-                Available: searching['movie-search']._attributes.available,
-                SupportedParams: searching['movie-search']._attributes.supportedParams,
+                Available: searching["movie-search"]._attributes.available,
+                SupportedParams: searching["movie-search"]._attributes.supportedParams,
               },
               MusicSearch: {
-                Available: searching['music-search']._attributes.available,
-                SupportedParams: searching['music-search']._attributes.supportedParams,
+                Available: searching["music-search"]._attributes.available,
+                SupportedParams: searching["music-search"]._attributes.supportedParams,
               },
               AudioSearch: {
-                Available: searching['audio-search']._attributes.available,
-                SupportedParams: searching['audio-search']._attributes.supportedParams,
+                Available: searching["audio-search"]._attributes.available,
+                SupportedParams: searching["audio-search"]._attributes.supportedParams,
               },
             },
-          };
-        });
-      });
+          }
+        })
+      })
   }
 
   /**
@@ -198,24 +191,24 @@ export class JackettService {
       .then(xml => xml2js(xml, { compact: true, nativeType: true }))
       .then((json: any) => {
         return json.caps.categories.category.map(category => {
-          let subcategories: JackettCategory[] = null;
+          let subcategories: Category[] = null
           if (category.subcat !== undefined) {
             subcategories = category.subcat.map(subcategory => {
               return {
                 ID: subcategory._attributes.id,
                 Name: subcategory._attributes.name,
-              };
-            });
+              }
+            })
           }
-          const result: JackettCategory = {
+          const result: Category = {
             ID: category._attributes.id,
             Name: category._attributes.name,
-          };
-          if (subcategories !== null) {
-            result.SubCategories = subcategories;
           }
-          return result;
-        });
-      });
+          if (subcategories !== null) {
+            result.SubCategories = subcategories
+          }
+          return result
+        })
+      })
   }
 }

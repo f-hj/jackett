@@ -55,10 +55,11 @@ export class Service {
    * @param {string} query Search string
    * @param {number[]} categories Categories to include
    */
-  public async search(query: string, categories?: number[]): Promise<Responses> {
+  public async search(query: string, categories?: number[], trackers?: string[]): Promise<Responses> {
     const url =
       `${this.host}/api/v2.0/indexers/all/results?apikey=${this.apiKey}&Query=${encodeURIComponent(query)}` +
-      `${categories ? "&Category[]=" + categories.join("&Category[]=") : ""}`
+      `${categories ? "&Category[]=" + categories.join("&Category[]=") : ""}` +
+      `${trackers ? "&Tracker[]=" + trackers.join("&Tracker[]=") : ""}`
 
     return request({
       url,
